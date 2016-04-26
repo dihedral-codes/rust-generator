@@ -4,26 +4,26 @@ struct Bracelets {
 }
 
 impl Bracelets {
-	
-	fn new(k: u8, w: u8) -> Bracelets  {
-		
-		// Set the bit mask for k bits.
-		let mut mask:u64 = 0;
-		let mut i: u8 = k;
-		while i > 4 {
-			mask = (mask << 4) | 0b1111u64;
-			i -= 4;
-		}
-		while i > 0 {
-			mask = (mask << 1) | 0b1u64;
-			i -= 1;
-		}
+  
+  fn new(k: u8, w: u8) -> Bracelets  {
+    
+    // Set the bit mask for k bits.
+    let mut mask:u64 = 0;
+    let mut i: u8 = k;
+    while i > 4 {
+      mask = (mask << 4) | 0b1111u64;
+      i -= 4;
+    }
+    while i > 0 {
+      mask = (mask << 1) | 0b1u64;
+      i -= 1;
+    }
 
     // Start with 0111..11000....0
     let curr: u64 = ((1u64 << w) - 1) << (k - w - 1);
 
-		Bracelets { curr: curr, mask: mask }
-	}
+    Bracelets { curr: curr, mask: mask }
+  }
 
 }
 
