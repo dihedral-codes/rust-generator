@@ -1,11 +1,11 @@
 struct Bracelets {
   curr: u64
-	, mask: u64
+  , mask: u64
 }
 
 impl Bracelets {
 	
-	fn new(k: u8) -> Bracelets  {
+	fn new(k: u8, w: u8) -> Bracelets  {
 		
 		// Set the bit mask for k bits.
 		let mut mask:u64 = 0;
@@ -18,10 +18,10 @@ impl Bracelets {
 			mask = (mask << 1) | 0b1u64;
 			i -= 1;
 		}
-		
-		// Let the initial value be 10000..0 with k zeroes.
-		let curr: u64 = 1u64 << k - 1;
-		
+	
+    let curr: u64 = ((1u64 << w) - 1) << (k - w - 1);
+		// let curr: u64 = (1u64 << k - 1) | ((1u64 << (w - 1)) - 1); 
+
 		Bracelets { curr: curr, mask: mask }
 	}
 
@@ -31,9 +31,10 @@ impl Iterator for Bracelets {
   type Item = u64;
 
   fn next(&mut self) -> Option<u64> {
-	
-    self.curr += 1u64;
-		
+
+    let t:u64 = self.curr | (self.curr - 1);
+    self.curr = (t + 1) | (((!t & (t + 1)) - 1) >> (self.curr.trailing_zeros() + 1));  
+    
     if self.curr <= self.mask {
       Some(self.curr)
     } else {
@@ -43,7 +44,7 @@ impl Iterator for Bracelets {
 }
 
 fn main() {
-  for i in Bracelets::new(4) {
+  for i in Bracelets::new(8, 3) {
     println!("{:b}", i);
   }
 }
